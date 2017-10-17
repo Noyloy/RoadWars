@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: ffffb58f4e43c3242ab5c75f433cd6c0
+timeCreated: 1508066438
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Komika Sketch
+  fontNames:
+  - Komika Sketch
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

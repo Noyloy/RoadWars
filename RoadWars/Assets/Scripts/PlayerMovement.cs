@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
     public float Speed = 2f;
+
     private float speed { get; set; }
     private Dir nextTurn = Dir.Up;
     private Animator anim;
@@ -26,10 +27,12 @@ public class PlayerMovement : MonoBehaviour {
     {
         nextTurn = swipeManager.DetectSwipe() ?? nextTurn;
         nextTurn = getTurnFromAxis();
-        if (isRotating) speed = 2.4f;
-        else speed = Speed;
-        performTurn();
 
+        // constant speed at turns - in order to solve the turn over/unde shoot.
+        if (isRotating) speed = 2.4f; 
+        else speed = Speed;
+
+        performTurn();
 
         rb.velocity = transform.forward * speed;
     }
@@ -38,6 +41,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (nextTurn == Dir.Right && !isRotating && turnPlayer)
         {
+            anim.Play("TurnRight");
             isRotating = true;
             horizontalDirection = 1;
             verticalDirection = 0;
@@ -46,6 +50,7 @@ public class PlayerMovement : MonoBehaviour {
         }
         if (nextTurn == Dir.Left && !isRotating && turnPlayer)
         {
+            anim.Play("TurnLeft");
             isRotating = true;
             horizontalDirection = -1;
             verticalDirection = 0;
@@ -69,6 +74,10 @@ public class PlayerMovement : MonoBehaviour {
         turnPlayer = true;
     }
 
+    /// <summary>
+    /// helper method for input from keyboard
+    /// </summary>
+    /// <returns>the direction to turn to</returns>
     private Dir getTurnFromAxis()
     {
         float x = Input.GetAxis("Horizontal");

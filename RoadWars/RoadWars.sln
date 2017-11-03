@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadWars", "RoadWars.csproj", "{7531A00A-B925-A0B9-166D-496A539DF9C5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadWars.Plugins", "RoadWars.Plugins.csproj", "{1515106A-9F02-64C2-C47D-46EEE942E282}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadWars", "RoadWars.csproj", "{7531A00A-B925-A0B9-166D-496A539DF9C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +11,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7531A00A-B925-A0B9-166D-496A539DF9C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7531A00A-B925-A0B9-166D-496A539DF9C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7531A00A-B925-A0B9-166D-496A539DF9C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7531A00A-B925-A0B9-166D-496A539DF9C5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1515106A-9F02-64C2-C47D-46EEE942E282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1515106A-9F02-64C2-C47D-46EEE942E282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1515106A-9F02-64C2-C47D-46EEE942E282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1515106A-9F02-64C2-C47D-46EEE942E282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7531A00A-B925-A0B9-166D-496A539DF9C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7531A00A-B925-A0B9-166D-496A539DF9C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7531A00A-B925-A0B9-166D-496A539DF9C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7531A00A-B925-A0B9-166D-496A539DF9C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

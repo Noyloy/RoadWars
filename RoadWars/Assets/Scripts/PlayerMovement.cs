@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
     public float Speed = 2f;
 
-    private float speed { get; set; }
+    private float turnSpeed = 3f;
     private Dir nextTurn = Dir.Up;
     private Animator anim;
     private TouchSwipeManager swipeManager = new TouchSwipeManager();
@@ -20,58 +20,42 @@ public class PlayerMovement : MonoBehaviour {
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        speed = Speed;
     }
 
     void Update()
     {
         nextTurn = swipeManager.DetectSwipe() ?? nextTurn;
         nextTurn = getTurnFromAxis();
-
-        // constant speed at turns - in order to solve the turn over/unde shoot.
-        if (isRotating) speed = 2.4f; 
-        else speed = Speed;
-
-        performTurn();
-
-        rb.velocity = transform.forward * speed;
+        rb.velocity = (isRotating) ? transform.forward * turnSpeed : transform.forward * Speed;
     }
 
-    private void performTurn()
+
+    IEnumerator RotateMe(Vector3 byAngles, float inTime)
     {
-        if (nextTurn == Dir.Right && !isRotating && turnPlayer)
+        isRotating = true;
+        var fromAngle = transform.rotation;
+        var toAngle = Quaternion.Euler(transform.eulerAngles + byAngles);
+        for (float t = 0f; t <= 2f; t += Time.deltaTime / inTime)
         {
-            anim.Play("TurnRight");
-            isRotating = true;
-            horizontalDirection = 1;
-            verticalDirection = 0;
-            temp = 0;
-            nextTurn = Dir.Up;
+            transform.rotation = Quaternion.Slerp(fromAngle, toAngle, t);
+            yield return null;
         }
-        if (nextTurn == Dir.Left && !isRotating && turnPlayer)
-        {
-            anim.Play("TurnLeft");
-            isRotating = true;
-            horizontalDirection = -1;
-            verticalDirection = 0;
-            temp = 0;
-            nextTurn = Dir.Up;
-        }
-        transform.Rotate(Vector3.up * 90 * Time.fixedDeltaTime * horizontalDirection, Space.World);
-        temp += 90 * Time.fixedDeltaTime;
-        if (temp >= 90)
-        {
-            temp = 0;
-            horizontalDirection = 0;
-            verticalDirection = 0;
-            isRotating = false;
-        }
-        turnPlayer = false;
+        isRotating = false;
+        nextTurn = Dir.Up;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        turnPlayer = true;
+        if (nextTurn == Dir.Left && !isRotating)
+        {
+            StartCoroutine(RotateMe(Vector3.up * -90, 0.6f));
+            anim.Play("TurnLeft");
+        }
+        if (nextTurn == Dir.Right && !isRotating)
+        {
+            StartCoroutine(RotateMe(Vector3.up * 90, 0.6f));
+            anim.Play("TurnRight");
+        }
     }
 
     /// <summary>

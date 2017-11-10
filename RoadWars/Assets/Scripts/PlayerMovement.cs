@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour {
     private Animator anim;
     private TouchSwipeManager swipeManager = new TouchSwipeManager();
     private Rigidbody rb;
+    private float turnRadious = 1.35f;
+
+    Quaternion startRot, endRot;
 
     float temp;
     bool isRotating, turnPlayer;
@@ -20,14 +23,17 @@ public class PlayerMovement : MonoBehaviour {
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        startRot = Quaternion.LookRotation(transform.forward);
+        endRot = Quaternion.LookRotation(transform.forward);
     }
 
     void Update()
     {
         nextTurn = swipeManager.DetectSwipe() ?? nextTurn;
         nextTurn = getTurnFromAxis();
-        rb.velocity = (isRotating) ? transform.forward * turnSpeed : transform.forward * Speed;
+        rb.velocity = transform.forward * Speed;
     }
+
 
 
     IEnumerator RotateMe(Vector3 byAngles, float inTime)
@@ -35,9 +41,9 @@ public class PlayerMovement : MonoBehaviour {
         isRotating = true;
         var fromAngle = transform.rotation;
         var toAngle = Quaternion.Euler(transform.eulerAngles + byAngles);
-        for (float t = 0f; t <= 2f; t += Time.deltaTime / inTime)
+        for (float t = 0; t<=1.15f ; t += Time.fixedDeltaTime / inTime)
         {
-            transform.rotation = Quaternion.Slerp(fromAngle, toAngle, t);
+            transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
             yield return null;
         }
         isRotating = false;
@@ -48,12 +54,12 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (nextTurn == Dir.Left && !isRotating)
         {
-            StartCoroutine(RotateMe(Vector3.up * -90, 0.6f));
+            StartCoroutine(RotateMe(Vector3.up * -90, (Mathf.PI * turnRadious) / (2 * rb.velocity.magnitude)));
             anim.Play("TurnLeft");
         }
         if (nextTurn == Dir.Right && !isRotating)
         {
-            StartCoroutine(RotateMe(Vector3.up * 90, 0.6f));
+            StartCoroutine(RotateMe(Vector3.up * 90, (Mathf.PI * turnRadious) / (2 * rb.velocity.magnitude)));
             anim.Play("TurnRight");
         }
     }

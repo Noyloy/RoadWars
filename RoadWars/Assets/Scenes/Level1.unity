@@ -3730,7 +3730,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &739468377
 Transform:
   m_ObjectHideFlags: 0
@@ -7164,10 +7164,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1579128660}
-  - component: {fileID: 1579128659}
   - component: {fileID: 1579128661}
   - component: {fileID: 1579128662}
   - component: {fileID: 1579128663}
+  - component: {fileID: 1579128659}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -7183,10 +7183,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1579128658}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ba5a9daf7e9d5b4eae427ff82d7ee7e, type: 3}
+  m_Script: {fileID: 11500000, guid: fc3f9e41ab4ced641ab3450a3941c702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 2
 --- !u!4 &1579128660
 Transform:
   m_ObjectHideFlags: 0
@@ -7236,7 +7235,7 @@ Animator:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1579128658}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 388e7ed887ae5434cb01d9b2f60ec996, type: 2}
   m_CullingMode: 0

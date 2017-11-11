@@ -240,6 +240,7 @@
     <Compile Include="Assets\Scripts\Car.cs" />
     <Compile Include="Assets\Scripts\CarFactory.cs" />
     <Compile Include="Assets\Scripts\IVehicle.cs" />
+    <Compile Include="Assets\Scripts\Lane.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
   </ItemGroup>

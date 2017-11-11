@@ -81,6 +81,7 @@ public class PlayerMovement : MonoBehaviour {
 }
 
 public enum Dir { Up, Right, Left, Down }
+public enum Lane { Left = -1, Center = 0, Right = 1 }
 
 public class TouchSwipeManager
 {

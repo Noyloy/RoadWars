@@ -17,12 +17,18 @@ public class Car : IVehicle {
 
     public float Acceleration { get { return acceleration; } }
     private float acceleration;
-    
+
+    private bool isTurning = false;
+    private Lane carLane = Lane.Center;
+
     public GameObject GameObject;
+
     private BoxCollider carBounds;
     private Transform carTransform;
+    private Animator carAnimator;
+    private Rigidbody carRigidbody;
 
-    public Car (GameObject go, Vector3? size, Vector3? position, float speed = 2f, float acceleration = 1f)
+    public Car (GameObject go, Vector3? size = null, Vector3? position = null, float speed = 2f, float acceleration = 1f)
     {
         GameObject = go;
         this.speed = speed;
@@ -46,12 +52,13 @@ public class Car : IVehicle {
     {
         carBounds = getComponent<BoxCollider>();
         carTransform = getComponent<Transform>();
+        carAnimator = getComponent<Animator>();
+        carRigidbody = getComponent<Rigidbody>();
 
         carBounds.size = Size;
         carBounds.center = Center;
 
         carTransform.position = Position;
-        //carTransform.localScale = Size;
     }
 
     public void Accelerate()
@@ -69,7 +76,30 @@ public class Car : IVehicle {
         throw new System.NotImplementedException();
     }
 
-    public void Turn(Dir direction)
+    public IEnumerator Turn(Dir direction)
+    {
+        if (direction == Dir.Down || direction == Dir.Up) yield break;
+
+        isTurning = true;
+        carAnimator.SetInteger("nextTurn", (int)direction);
+        int degree = (direction == Dir.Left) ? -90 : 90;
+
+        Quaternion fromAngle = carTransform.rotation;
+        Quaternion toAngle = Quaternion.Euler(carTransform.eulerAngles + Vector3.up * degree);
+
+        (Mathf.PI * turnRadious) / (2 * rb.velocity.magnitude)
+
+        for (float t = 0; t <= 1.15f; t += Time.fixedDeltaTime / inTime)
+        {
+            transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
+            yield return null;
+        }
+        isRotating = false;
+        nextTurn = Dir.Up;
+
+    }
+
+    public IEnumerator SwitchLane(Lane lane)
     {
         throw new System.NotImplementedException();
     }

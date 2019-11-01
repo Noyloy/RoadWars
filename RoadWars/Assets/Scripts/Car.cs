@@ -18,7 +18,7 @@ public class Car : IVehicle {
     public float Acceleration { get { return acceleration; } }
     private float acceleration;
 
-    private bool isTurning = false;
+    public bool IsTurning { get; private set; }
     private Lane carLane = Lane.Center;
 
     public GameObject GameObject;
@@ -68,7 +68,7 @@ public class Car : IVehicle {
 
     public void Start()
     {
-        throw new System.NotImplementedException();
+        carRigidbody.velocity = carTransform.forward * speed;
     }
 
     public void Stop()
@@ -78,28 +78,25 @@ public class Car : IVehicle {
 
     public IEnumerator Turn(Dir direction)
     {
-        if (direction == Dir.Down || direction == Dir.Up) yield break;
+        if (direction == Dir.Down || direction == Dir.Up || IsTurning) yield break;
 
-        isTurning = true;
-        carAnimator.SetInteger("nextTurn", (int)direction);
+        IsTurning = true;
         int degree = (direction == Dir.Left) ? -90 : 90;
 
         Quaternion fromAngle = carTransform.rotation;
         Quaternion toAngle = Quaternion.Euler(carTransform.eulerAngles + Vector3.up * degree);
 
-        (Mathf.PI * turnRadious) / (2 * rb.velocity.magnitude)
+        float turnTime = (Mathf.PI * 1.5f) / (2 * carRigidbody.velocity.magnitude);
 
-        for (float t = 0; t <= 1.15f; t += Time.fixedDeltaTime / inTime)
+        for (float t = 0; t <= 1.15f; t += Time.fixedDeltaTime / turnTime)
         {
-            transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
+            carTransform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
             yield return null;
         }
-        isRotating = false;
-        nextTurn = Dir.Up;
-
+        IsTurning = false;
     }
 
-    public IEnumerator SwitchLane(Lane lane)
+    public IEnumerator SwitchLane(Dir dir)
     {
         throw new System.NotImplementedException();
     }

@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour {
     private Animator anim;
     private TouchSwipeManager swipeManager = new TouchSwipeManager();
     private Rigidbody rb;
-    private float turnRadious = 1.35f;
+    public float turnRadious = 5f;
 
     Quaternion startRot, endRot;
 
@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour {
         isRotating = true;
         var fromAngle = transform.rotation;
         var toAngle = Quaternion.Euler(transform.eulerAngles + byAngles);
-        for (float t = 0; t<=1.15f ; t += Time.fixedDeltaTime / inTime)
+        for (float t = 0; t<=1.25f ; t += Time.fixedDeltaTime / inTime)
         {
             transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
             yield return null;
@@ -52,6 +52,22 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag.Equals("Respawn")){
+            respawnTriggered();
+        }
+        else {
+            turnTriggered();
+        }
+
+    }
+
+    private void respawnTriggered() {
+        Debug.Log("Respawn!");
+        transform.position = CarFactory.BASE_CAR_POS;
+        transform.rotation = Quaternion.Euler(new Vector3(0f, 180f , 0f));
+    }
+
+    private void turnTriggered() {
         if (nextTurn == Dir.Left && !isRotating)
         {
             StartCoroutine(RotateMe(Vector3.up * -90, (Mathf.PI * turnRadious) / (2 * rb.velocity.magnitude)));

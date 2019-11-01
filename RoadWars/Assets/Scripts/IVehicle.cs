@@ -5,7 +5,7 @@ using UnityEngine;
 public interface IVehicle
 {
     IEnumerator Turn(Dir direction);
-    IEnumerator SwitchLane(Lane lane);
+    IEnumerator SwitchLane(Dir dir);
     void Accelerate();
     void Start();
     void Stop();

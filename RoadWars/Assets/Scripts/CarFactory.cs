@@ -8,6 +8,6 @@ public class CarFactory {
 
     public static Car GetPizza(GameObject gameObject)
     {
-        return new Car(gameObject, BASE_CAR_SCALE, BASE_CAR_POS, 1.25f);
+        return new Car(gameObject, BASE_CAR_SCALE, BASE_CAR_POS);
     }
 }

@@ -26,6 +26,7 @@ public class Player : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("player colised with "+other.tag);
         //TODO: handle collider tags - future enemies and oter
         if (nextTurn == Dir.Left && !pCar.IsTurning)
         {

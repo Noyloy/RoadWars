@@ -19,7 +19,6 @@ public class Car : IVehicle {
     private float acceleration;
 
     public bool IsTurning { get; private set; }
-    private Lane carLane = Lane.Center;
 
     public GameObject GameObject;
 
@@ -54,9 +53,6 @@ public class Car : IVehicle {
         carTransform = getComponent<Transform>();
         carAnimator = getComponent<Animator>();
         carRigidbody = getComponent<Rigidbody>();
-
-        carBounds.size = Size;
-        carBounds.center = Center;
 
         carTransform.position = Position;
     }

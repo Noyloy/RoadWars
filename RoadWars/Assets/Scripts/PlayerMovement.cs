@@ -5,13 +5,11 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
     public float Speed = 2f;
-
-    private float turnSpeed = 3f;
     private Dir nextTurn = Dir.Up;
     private Animator anim;
     private TouchSwipeManager swipeManager = new TouchSwipeManager();
     private Rigidbody rb;
-    public float turnRadious = 5f;
+    public float turnRadious = 5.5f;
 
     Quaternion startRot, endRot;
 
@@ -29,8 +27,11 @@ public class PlayerMovement : MonoBehaviour {
 
     void Update()
     {
-        nextTurn = swipeManager.DetectSwipe() ?? nextTurn;
-        nextTurn = getTurnFromAxis();
+        nextTurn = swipeManager.DetectSwipe() ?? getTurnFromAxis();
+    }
+
+    void FixedUpdate()
+    {
         rb.velocity = transform.forward * Speed;
     }
 
@@ -52,6 +53,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("triggered: "+other.tag);
         if (other.tag.Equals("Respawn")){
             respawnTriggered();
         }

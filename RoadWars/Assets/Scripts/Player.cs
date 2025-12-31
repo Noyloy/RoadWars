@@ -1,60 +1,93 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    private Dir nextTurn = Dir.Up;
+    private Dir? pendingTurn = null; // Intent for the turn
+    private const float TURN_LOOKAHEAD_TIME = 1.5f; // How far ahead to look for a turn (in seconds)
+
     private Car pCar;
     private TouchSwipeManager swipeManager = new TouchSwipeManager();
-    private Animator anim;
 
     void Start()
     {
         Debug.Log("starting player script");
-        // get players car
-        anim = GetComponent<Animator>();
         pCar = CarFactory.GetPizza(gameObject);
         pCar.Start();
     }
 	
 	void Update () {
-        nextTurn = swipeManager.DetectSwipe() ?? nextTurn;
-        nextTurn = getTurnFromAxis();
+        // Continuous update for car physics/movement
+        pCar.Update();
 
+        // 1. Detect Input
+        Dir? input = swipeManager.DetectSwipe();
+
+        // Keyboard fallback
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)) input = Dir.Left;
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) input = Dir.Right;
+
+        if (input.HasValue)
+        {
+            HandleInput(input.Value);
+        }
+    }
+
+    private void HandleInput(Dir dir)
+    {
+        if (IsApproachingTurn(out Collider turnTrigger))
+        {
+            // We are approaching a turn. Interpret this input as a Turn intent.
+            // We do NOT switch lanes.
+            Debug.Log("Approaching Turn: Storing Pending Turn " + dir);
+            pendingTurn = dir;
+        }
+        else
+        {
+            // We are on a straight road (or far from turn). Interpret as Lane Switch.
+            Debug.Log("Straight Road: Switching Lane " + dir);
+            StartCoroutine(pCar.SwitchLane(dir));
+        }
+    }
+
+    private bool IsApproachingTurn(out Collider hitCollider)
+    {
+        hitCollider = null;
+        float lookDist = pCar.Speed * TURN_LOOKAHEAD_TIME;
+
+        // Raycast forward from car position
+        Ray ray = new Ray(pCar.GameObject.transform.position, pCar.GameObject.transform.forward);
+        RaycastHit[] hits = Physics.RaycastAll(ray, lookDist);
+
+        foreach (var hit in hits)
+        {
+            // Check for Triggers that are likely Turn Triggers
+            // Logic: Is Trigger, Not Respawn, Not Player, Not Car Root
+            if (hit.collider.isTrigger &&
+                !hit.collider.CompareTag("Respawn") &&
+                hit.collider.gameObject != gameObject &&
+                hit.collider.transform.root != transform.root)
+            {
+                hitCollider = hit.collider;
+                return true;
+            }
+        }
+        return false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("player colised with "+other.tag);
-        //TODO: handle collider tags - future enemies and oter
-        if (nextTurn == Dir.Left && !pCar.IsTurning)
-        {
-            StartCoroutine(pCar.Turn(nextTurn));
-            anim.Play("TurnLeft");
+        if (other.tag.Equals("Respawn")){
+            return;
         }
-        if (nextTurn == Dir.Right && !pCar.IsTurning)
+
+        // It is a Turn Trigger.
+        if (pendingTurn.HasValue)
         {
-            StartCoroutine(pCar.Turn(nextTurn));
-            //StartCoroutine(RotateMe(Vector3.up * 90, (Mathf.PI * turnRadious) / (2 * rb.velocity.magnitude)));
-            anim.Play("TurnRight");
+            // Execute the turn
+            StartCoroutine(pCar.Turn(pendingTurn.Value));
+            pendingTurn = null;
         }
-        nextTurn = Dir.Up;
-    }
-
-
-    /// <summary>
-    /// helper method for input from keyboard
-    /// </summary>
-    /// <returns>the direction to turn to</returns>
-    private Dir getTurnFromAxis()
-    {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-        if (x > 0) return Dir.Right;
-        if (x < 0) return Dir.Left;
-        if (y > 0) return Dir.Up;
-        if (y < 0) return Dir.Down;
-        return nextTurn;
     }
 }

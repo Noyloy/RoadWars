@@ -32,6 +32,10 @@ public class Car : IVehicle {
         // Assume we start at Center Lane (0).
 
         setCarGameObject();
+        if (size.HasValue)
+        {
+            carTransform.localScale = size.Value;
+        }
         if (position.HasValue)
         {
             carTransform.position = position.Value;
@@ -47,8 +51,12 @@ public class Car : IVehicle {
         if (carRigidbody == null)
             carRigidbody = GameObject.AddComponent<Rigidbody>();
 
+        if (GameObject.GetComponent<Collider>() == null)
+            GameObject.AddComponent<BoxCollider>();
+
         carRigidbody.useGravity = true;
         carRigidbody.isKinematic = false;
+        carRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     public void Start()
@@ -72,7 +80,13 @@ public class Car : IVehicle {
     {
         if (carRigidbody != null && !carRigidbody.isKinematic)
         {
-            carRigidbody.velocity = carTransform.forward * Speed;
+            Vector3 forward = carTransform.forward;
+            forward.y = 0;
+            if (forward.sqrMagnitude > 0.001f) forward.Normalize();
+
+            Vector3 velocity = forward * Speed;
+            velocity.y = carRigidbody.velocity.y;
+            carRigidbody.velocity = velocity;
         }
     }
 
@@ -99,6 +113,7 @@ public class Car : IVehicle {
         }
 
         IsTurning = true;
+        carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true; // Disable physics interference
 
         // Calculate Radius based on Lane
